@@ -2,7 +2,7 @@
 
 ## What's this software ?  
 
-How many is writed in Python 3. It calculates for you how many days you lived. You have to enter your name and date birth then you have to enter the date of today.
+How many is writed in Python 3. It calculates for you how many days you lived. You have to enter your name and date birth.
 
 
 ![Screenshot](screenshot.png)

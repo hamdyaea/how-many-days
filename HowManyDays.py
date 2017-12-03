@@ -1,8 +1,7 @@
 # Developer : Hamdy Abou El Anein
-
+import datetime
 from datetime import date
 from easygui import *
-
 
 calendar = "./images/calendar.gif"
 yearBirth = 0
@@ -19,23 +18,26 @@ monthBirth = birthValues[2]
 dayBirth = birthValues[3]
 
 
-todayYear = 0
-todayMonth = 0
-todayDay = 0
-msg = "Enter the date of today"
-title = "Date of today"
-fieldNames = ["Year", "Month", "Day"]
-todayValues = []
-todayValues = multenterbox(msg, title, fieldNames)
-todayYear = todayValues[0]
-todayMonth = todayValues[1]
-todayDay = todayValues[2]
+#todayYear = 0
+#todayMonth = 0
+#todayDay = 0
+#msg = "Enter the date of today"
+#title = "Date of today"
+#fieldNames = ["Year", "Month", "Day"]
+#todayValues = []
+#todayValues = multenterbox(msg, title, fieldNames) # Enter manualy the values
+#todayYear = todayValues[0]
+#todayMonth = todayValues[1]
+#todayDay = todayValues[2]
 
 
-d0 = date(int(todayYear), int(todayMonth), int(todayDay)) #today Year,Month,Day
+#d0 = date(int(todayYear), int(todayMonth), int(todayDay)) #today Year,Month,Day, if manual values
 d1 = date(int(yearBirth), int(monthBirth), int(dayBirth)) #date in past Year,Month,Day
+
+now = datetime.datetime.now()
+d0 = date(now.year, now.month, now.day)
 delta = d0 - d1
-#print(delta.days)
+
 image = calendar
 message = "Congratulation "+str(yourName)+str(", you lived ") +str(delta.days) +str(" days until today !")
 msgCenter = message.center(80)
