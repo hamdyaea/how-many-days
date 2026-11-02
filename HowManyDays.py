@@ -1,46 +1,53 @@
-# Developer : Hamdy Abou El Anein
-import datetime
+#!/usr/bin/env python3
+# Developer: Hamdy Abou El Anein
+# Contact: info@daylightlinux.ch
+# SPDX-License-Identifier: GPL-3.0-only
+"""Calculate the number of calendar days lived."""
+from __future__ import annotations
+import argparse
 from datetime import date
-from easygui import *
+import tkinter as tk
+from tkinter import messagebox, ttk
 
-calendar = "./images/calendar.gif"
-yearBirth = 0
-monthBirth = 0
-dayBirth = 0
-msg = "Enter all your informations"
-title = "All your informations"
-fieldNames = ["Your Firstname","Year of birth", "Month of birth", "Day of Birth"]
-birthValues = []
-birthValues = multenterbox(msg, title, fieldNames)
-yourName = birthValues[0]
-yearBirth = birthValues[1]
-monthBirth = birthValues[2]
-dayBirth = birthValues[3]
+def days_lived(birthday: date, today: date | None = None) -> int:
+    today = today or date.today()
+    if birthday > today:
+        raise ValueError("Birth date cannot be in the future")
+    return (today - birthday).days
 
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--name", help="Name for the greeting")
+    parser.add_argument("--birthdate", help="Birth date in ISO format YYYY-MM-DD; CLI mode")
+    args = parser.parse_args()
+    if args.birthdate is not None:
+        try:
+            count = days_lived(date.fromisoformat(args.birthdate))
+        except ValueError as exc:
+            parser.error(str(exc))
+        print(f"{args.name or 'You'}: {count} days lived")
+        return
+    root = tk.Tk()
+    root.title("How Many Days Have You Lived?")
+    root.geometry("430x255")
+    frame = ttk.Frame(root, padding=20)
+    frame.pack(fill="both", expand=True)
+    name = tk.StringVar(value=args.name or "")
+    birthday = tk.StringVar(value="2000-01-01")
+    result = tk.StringVar()
+    for row, (label, variable) in enumerate((("Name", name), ("Birth date (YYYY-MM-DD)", birthday))):
+        ttk.Label(frame, text=label).grid(row=row, column=0, sticky="w", pady=8)
+        ttk.Entry(frame, textvariable=variable, width=25).grid(row=row, column=1, pady=8)
+    def calculate() -> None:
+        try:
+            count = days_lived(date.fromisoformat(birthday.get()))
+        except ValueError as exc:
+            messagebox.showerror("Invalid date", str(exc), parent=root)
+            return
+        result.set(f"{name.get().strip() or 'You'}: {count:,} days lived")
+    ttk.Button(frame, text="Calculate", command=calculate).grid(row=2, column=0, columnspan=2, pady=12)
+    ttk.Label(frame, textvariable=result).grid(row=3, column=0, columnspan=2)
+    root.mainloop()
 
-#todayYear = 0
-#todayMonth = 0
-#todayDay = 0
-#msg = "Enter the date of today"
-#title = "Date of today"
-#fieldNames = ["Year", "Month", "Day"]
-#todayValues = []
-#todayValues = multenterbox(msg, title, fieldNames) # Enter manualy the values
-#todayYear = todayValues[0]
-#todayMonth = todayValues[1]
-#todayDay = todayValues[2]
-
-
-#d0 = date(int(todayYear), int(todayMonth), int(todayDay)) #today Year,Month,Day, if manual values
-d1 = date(int(yearBirth), int(monthBirth), int(dayBirth)) #date in past Year,Month,Day
-
-now = datetime.datetime.now()
-d0 = date(now.year, now.month, now.day)
-delta = d0 - d1
-
-image = calendar
-message = "Congratulation "+str(yourName)+str(", you lived ") +str(delta.days) +str(" days until today !")
-msgCenter = message.center(80)
-choices = ["Ok"]
-reply = buttonbox(msg=msgCenter, image=image, choices=choices)
-
+if __name__ == "__main__":
+    main()
