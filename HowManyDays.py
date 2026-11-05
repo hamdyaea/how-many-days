@@ -6,6 +6,7 @@
 from __future__ import annotations
 import argparse
 from datetime import date
+from pathlib import Path
 import tkinter as tk
 from tkinter import messagebox, ttk
 
@@ -29,9 +30,12 @@ def main() -> None:
         return
     root = tk.Tk()
     root.title("How Many Days Have You Lived?")
-    root.geometry("430x255")
     frame = ttk.Frame(root, padding=20)
     frame.pack(fill="both", expand=True)
+    artwork = tk.PhotoImage(file=str(Path(__file__).resolve().parent / "images/calendar-ui.png"))
+    illustration = tk.Label(frame, image=artwork)
+    illustration.image = artwork
+    illustration.grid(row=0, column=2, rowspan=3, padx=8)
     name = tk.StringVar(value=args.name or "")
     birthday = tk.StringVar(value="2000-01-01")
     result = tk.StringVar()
